@@ -1,0 +1,294 @@
+package com.aou.citysage
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Chip
+
+
+@Composable
+@Preview(showSystemUi = true)
+fun CitySageScreen() {
+    // Use RTL if needed (for Arabic)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // App Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = {},
+                    modifier = Modifier.size(40.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        Color(0xFF9C27B0)
+                    )
+                ) {
+                    Text("EN", fontSize = 12.sp, color = Color.White)
+                }
+                Column(
+                    modifier = Modifier.padding(end = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("CitySage", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("Saudi Arabia", fontSize = 14.sp, color = Color.Gray)
+                }
+            }
+
+            // City Tabs (Pill Buttons)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                val cities = listOf("Jeddah", "Makkah", "All Cities")
+                cities.forEachIndexed { index, city ->
+                    Button(
+                        onClick = {},
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .padding(vertical = 8.dp)
+                            .width(80.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        colors = when (index) {
+                            1 ->
+                                ButtonDefaults.buttonColors(
+                                    Color(0xFF9C27B0),
+                                    contentColor = Color.White
+                                )
+
+                            else -> ButtonDefaults.buttonColors(
+                                Color(0xFFF5F5F5),
+                                contentColor = Color.Gray
+                            )
+                        }
+                    ) {
+                        Text(city, fontSize = 14.sp)
+                    }
+                }
+            }
+
+            // Search Bar
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Filter",
+                    tint = Color(0xFF9C27B0),
+                    modifier = Modifier.size(24.dp).padding(end = 8.dp)
+                )
+                TextField(
+                    value = "",
+                    onValueChange = {},
+                    placeholder = { Text("ابحث عن المعالم والمطاعم...") },
+                    modifier = Modifier.weight(1f),
+                    textStyle = TextStyle(fontSize = 14.sp),
+                    singleLine = true,
+                    maxLines = 1,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                )
+            }
+
+            // Category Buttons (Icons + Text)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                CategoryButton(
+                    icon = Icons.Default.Search,
+                    text = "المتاحف"
+                )
+                CategoryButton(
+                    icon = Icons.Default.Search,
+                    text = "المطاعم"
+                )
+                CategoryButton(
+                    icon = Icons.Default.Search,
+                    text = "المتنزهات"
+                )
+                CategoryButton(
+                    icon = Icons.Default.Search,
+                    text = "الفنادق"
+                )
+            }
+
+            // All Places Section
+            Text(
+                text = "المنشآت (7)",
+                fontSize = 18.sp,
+                modifier = Modifier.padding(vertical = 16.dp),
+                textAlign = TextAlign.Center
+            )
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.sample_image),
+                        contentDescription = "Place Image",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    // Overlay: Location tag
+                    Box(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .align(Alignment.BottomStart)
+                    ) {
+                        Chip(
+                            label = { Text("Makkah", fontSize = 10.sp) },
+                            modifier = Modifier.size(50.dp),
+                            backgroundColor = Color(0xFF9C27B0),
+                            labelPadding = PaddingValues(4.dp),
+                            elevation = 0.dp
+                        )
+                    }
+                }
+
+                // Title Section
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        text = "المسجد الحرام",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            // Bottom Navigation Bar
+//            BottomNavigation(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(top = 16.dp),
+//                backgroundColor = Color.White,
+//                elevation = 8.dp
+//            ) {
+//                BottomNavigationItem(
+//                    icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+//                    label = { Text("اكتشف") },
+//                    selected = true,
+//                    onClick = {}
+//                )
+//                BottomNavigationItem(
+//                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
+//                    label = { Text("المفضلة") },
+//                    selected = false,
+//                    onClick = {}
+//                )
+//                BottomNavigationItem(
+//                    icon = { Icon(Icons.Default.CalendarToday, contentDescription = "Trips") },
+//                    label = { Text("رحلاتي") },
+//                    selected = false,
+//                    onClick = {}
+//                )
+//                BottomNavigationItem(
+//                    icon = { Icon(Icons.Default.Map, contentDescription = "Map") },
+//                    label = { Text("الخريطة") },
+//                    selected = false,
+//                    onClick = {}
+//                )
+//                BottomNavigationItem(
+//                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+//                    label = { Text("الملف الشخصي") },
+//                    selected = false,
+//                    onClick = {}
+//                )
+//            }
+            }
+        }
+    }
+
+    // Reusable Category Button Component
+    @Composable
+    fun CategoryButton(icon: ImageVector, text: String) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .size(80.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = text,
+                modifier = Modifier.size(32.dp),
+                tint = Color(0xFF2196F3)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = text,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
+        }
+    }
+

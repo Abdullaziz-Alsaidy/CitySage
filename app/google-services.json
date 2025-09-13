@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "704923007050",
+    "project_id": "citysage-3359b",
+    "storage_bucket": "citysage-3359b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704923007050:android:8d2542cdaa176320b54eb3",
+        "android_client_info": {
+          "package_name": "com.aou.citysage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGy3aEuDbtkJUCWmyNYvOoHEPuJS79s9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
