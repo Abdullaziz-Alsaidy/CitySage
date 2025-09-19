@@ -92,9 +92,7 @@ fun MyTripsScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("رحلاتي", fontSize = 45.sp, fontWeight = FontWeight.Bold)
-                    Text("3 Saved Places ", fontSize = 14.sp, color = Color.Gray,
-                        fontStyle = FontStyle.Italic, modifier = Modifier.padding(top = 15.dp)
-                    )
+
                 }
             }
 
