@@ -1,7 +1,5 @@
 package com.uni.sehhaty.Utilitie
 
-import android.R
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -12,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -21,10 +18,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aou.citysage.CitySageScreen
-import com.aou.citysage.LoginScreen
+import com.aou.citysage.screens.home.HomeScreen
+import com.aou.citysage.screens.Login.LoginScreen
 import com.aou.citysage.LoginViewModel
 import com.aou.citysage.Screens
+import com.aou.citysage.screens.favorite.FavoriteScreen
+import com.aou.citysage.screens.mytrips.MyTripsScreen
+import com.aou.citysage.screens.profile.MyProfileScreen
 
 
 @Composable
@@ -39,7 +39,7 @@ fun AppNavigation() {
     // Auto-navigate if user is already logged in
     LaunchedEffect(currentUser) {
         if (currentUser != null) {
-            navController.navigate(Screens.CitySagePage) {
+            navController.navigate(Screens.HomePage) {
                 popUpTo<Screens.LoginPage> { inclusive = true }
             }
         }
@@ -48,30 +48,26 @@ fun AppNavigation() {
     // Bottom Navigation Items
     val navItems = listOf(
         NavItem(
-            route = Screens.ProfilePage,
-            label = "Profile",
+            route = Screens.HomePage,
+            label = "HomePage",
             icon = Icons.Default.Person
         ),
         NavItem(
-            route = Screens.LoginPage,
-            label = "Search",
+            route = Screens.FavoritePage,
+            label = "FavoritePage",
             icon = Icons.Default.Search
         ),
         NavItem(
-            route = Screens.AppointmentsPage,
-            label = "Appointments",
+            route = Screens.MyTripsPage,
+            label = "MyTripsPage",
             icon = Icons.Default.DateRange
         ),
         NavItem(
-            route = Screens.LabPage,
+            route = Screens.MyProfilePage,
             label = "LAB",
             icon = Icons.Default.DateRange
         ),
-        NavItem(
-            route = Screens.MedicinePage,
-            label = "medicine",
-            icon = Icons.Default.DateRange
-        ),
+
     )
 
     Scaffold(
@@ -112,27 +108,37 @@ fun AppNavigation() {
         }
     ) { innerPadding ->
         NavHost(
-            navController = navController,
-            startDestination = Screens.LoginPage,
-            modifier = Modifier.padding(innerPadding)
+            navController =
+                navController,
+            startDestination =
+                Screens.LoginPage,
+            modifier =
+                Modifier.padding(innerPadding)
         ) {
-            composable<Screens.LoginPage> {
+            composable<Screens.LoginPage>
+            {
                 LoginScreen(
                     viewModel = loginViewModel,
                     onLoginSuccess = {
-                        navController.navigate(Screens.CitySagePage) {
-                            popUpTo<Screens.LoginPage> { inclusive = true }
-                        }
-                    }
-                )
+                        navController.navigate(Screens.HomePage)
+                        { popUpTo<Screens.LoginPage> {inclusive = true} }
+                    })
             }
-            composable<Screens.CitySagePage> {
-                CitySageScreen()
+            composable<Screens.HomePage>
+            {
+                HomeScreen() }
+            composable<Screens.FavoritePage>
+            {
+                FavoriteScreen()
             }
-
-
-
-
+            composable<Screens.FavoritePage>
+            {
+                MyTripsScreen()
+            }
+            composable<Screens.FavoritePage>
+            {
+                MyProfileScreen()
+            }
 
 
 

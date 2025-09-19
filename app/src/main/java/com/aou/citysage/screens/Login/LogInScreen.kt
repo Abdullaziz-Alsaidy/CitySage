@@ -1,4 +1,4 @@
-package com.aou.citysage
+package com.aou.citysage.screens.Login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,13 +14,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.aou.citysage.LoginViewModel
+import com.aou.citysage.UiState
 
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
     onLoginSuccess: () -> Unit
-) {
+)
+{
     val loginState by viewModel.loginState.collectAsState()
     val focusManager = LocalFocusManager.current
 
@@ -152,7 +155,8 @@ fun AlertDialogExample(
     icon: ImageVector,
     isConfirmEnabled: Boolean,
     content: @Composable () -> Unit
-) {
+)
+{
     AlertDialog(
         icon = {
             Icon(icon, contentDescription = "Example Icon")
@@ -179,3 +183,21 @@ fun AlertDialogExample(
         dismissButton = null
     )
 }
+
+
+
+
+data class Place(
+    val name :String= "details 1 ",
+    val icon: String= "details 1 ",
+    val details: String,
+    val distance :String= "details 1 ",
+    val rating: String= "details 1 ",
+    val free: String= "details 1 ",
+    val times : String= "details 1 "
+)
+//Card(
+//modifier = Modifier
+//.fillMaxWidth()
+//.padding(vertical = 8.dp),
+//shape = RoundedCornerShape(12.dp)

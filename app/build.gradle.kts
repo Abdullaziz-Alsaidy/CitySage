@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.aou.citysage"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -71,5 +71,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("com.composables:icons-lucide:1.0.0")
+    implementation("androidx.compose.ui:ui:1.5.4")
+    implementation("androidx.compose.runtime:runtime:1.5.4")
+    implementation("androidx.compose.foundation:foundation:1.5.4")
+    implementation("androidx.compose.material:material:1.5.4")
+    implementation("androidx.compose.material:material-icons-core:1.5.4")
+
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
 }

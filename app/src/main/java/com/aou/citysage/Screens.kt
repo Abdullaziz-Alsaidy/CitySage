@@ -8,25 +8,16 @@ sealed interface Screens {
     data object LoginPage
 
     @Serializable
-    data object CitySagePage
+    data object HomePage
 
     @Serializable
-    data class HospitalDetailsPage(val hospitalId: String)
+    data object FavoritePage
 
     @Serializable
-    data class DoctorDetailsPage(val doctorId: String)
+    data object MyTripsPage
 
     @Serializable
-    data object AppointmentsPage
+    data object MyProfilePage
 
-    @Serializable
-    data object ResultsPage
-
-    @Serializable
-    data object ProfilePage
-    @Serializable
-    data object LabPage
-    @Serializable
-    data object MedicinePage
 
 }

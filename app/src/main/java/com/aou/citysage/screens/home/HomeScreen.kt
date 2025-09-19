@@ -1,10 +1,9 @@
-package com.aou.citysage
+package com.aou.citysage.screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,48 +13,55 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.wear.compose.material.Chip
+import com.aou.citysage.R
+import com.aou.citysage.screens.Login.Place
 
 
 @Composable
 @Preview(showSystemUi = true)
-fun CitySageScreen() {
+fun HomeScreen() {
+    val scrollState = rememberScrollState()
     // Use RTL if needed (for Arabic)
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp)
+                .fillMaxHeight()
+                .verticalScroll(scrollState)
+            ,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        )
+        {
             // App Header
+            Spacer(modifier = Modifier.height(15.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -63,27 +69,30 @@ fun CitySageScreen() {
             ) {
                 Button(
                     onClick = {},
-                    modifier = Modifier.size(40.dp),
+                    //modifier = Modifier.size(40.dp),
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(
-                        Color(0xFF9C27B0)
+                        Color(0xFF7857B2)
                     )
                 ) {
-                    Text("EN", fontSize = 12.sp, color = Color.White)
+                    Text("EN", fontSize = 18.sp, color = Color.Black,fontStyle = FontStyle.Italic)
                 }
                 Column(
                     modifier = Modifier.padding(end = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("CitySage", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text("Saudi Arabia", fontSize = 14.sp, color = Color.Gray)
+                    Text("Discover Saudi Arabia", fontSize = 14.sp, color = Color.Gray,
+                        fontStyle = FontStyle.Italic
+                    )
                 }
             }
 
             // City Tabs (Pill Buttons)
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                modifier = Modifier.fillMaxWidth().height(50.dp),
+                horizontalArrangement = Arrangement.End,
+
             ) {
                 val cities = listOf("Jeddah", "Makkah", "All Cities")
                 cities.forEachIndexed { index, city ->
@@ -91,8 +100,8 @@ fun CitySageScreen() {
                         onClick = {},
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
-                            .padding(vertical = 8.dp)
-                            .width(80.dp),
+                            .padding(vertical = 8.dp),
+                            //.width(80.dp),
                         shape = RoundedCornerShape(20.dp),
                         colors = when (index) {
                             1 ->
@@ -116,12 +125,15 @@ fun CitySageScreen() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .padding(vertical = 2.dp).height(50.dp),
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Default.Search,
+                   // imageVector = Icons.Default.Search,
+
+                    painter = painterResource(id = R.drawable.filter_icon),
+
                     contentDescription = "Filter",
                     tint = Color(0xFF9C27B0),
                     modifier = Modifier.size(24.dp).padding(end = 8.dp)
@@ -129,9 +141,9 @@ fun CitySageScreen() {
                 TextField(
                     value = "",
                     onValueChange = {},
-                    placeholder = { Text("ابحث عن المعالم والمطاعم...") },
+                    placeholder = { Text("Search") },
                     modifier = Modifier.weight(1f),
-                    textStyle = TextStyle(fontSize = 14.sp),
+                    textStyle = TextStyle(fontSize = 12.sp),
                     singleLine = true,
                     maxLines = 1,
                     leadingIcon = {
@@ -140,7 +152,8 @@ fun CitySageScreen() {
                             contentDescription = "Search",
                             modifier = Modifier.size(20.dp)
                         )
-                    }
+                    },
+
                 )
             }
 
@@ -149,79 +162,67 @@ fun CitySageScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                CategoryButton(
-                    icon = Icons.Default.Search,
-                    text = "المتاحف"
+                val list = listOf(
+                    Place(name = "name 1 ", icon = "icon 1 ", details = "details 1 "),
+                    Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
+                    Place(name = "name 3 ", icon = "icon 3 ", details = "details 3 "),
+                    Place(name = "name 4 ", icon = "icon 4 ", details = "details 4 "),
+                    Place(name = "name 1 ", icon = "icon 1 ", details = "details 1 "),
+                    Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
+                    Place(name = "name 1 ", icon = "icon 1 ", details = "details 1 "),
+                    Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
                 )
-                CategoryButton(
-                    icon = Icons.Default.Search,
-                    text = "المطاعم"
-                )
-                CategoryButton(
-                    icon = Icons.Default.Search,
-                    text = "المتنزهات"
-                )
-                CategoryButton(
-                    icon = Icons.Default.Search,
-                    text = "الفنادق"
-                )
+                LazyRow(
+                   // modifier = Modifier.fillMaxSize()
+                ) {
+                    // Use `items` to iterate over a list
+                    items(list) { item ->
+                        CategoryButton(item.name)
+                    }
+                    // You can also add a single item using `item`
+                    item {
+                        //Text(text = "This is a footer item", modifier = Modifier.padding(16.dp))
+                    }
+                }
             }
 
             // All Places Section
             Text(
                 text = "المنشآت (7)",
                 fontSize = 18.sp,
-                modifier = Modifier.padding(vertical = 16.dp),
-                textAlign = TextAlign.Center
+                modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
+                textAlign = TextAlign.End
+            )
+            val list = listOf(
+                Place(name = "name 1 ", icon = "icon 1 ", details = "details 1 "),
+                Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
+                Place(name = "name 3 ", icon = "icon 3 ", details = "details 3 "),
+                Place(name = "name 4 ", icon = "icon 4 ", details = "details 4 "),
+                Place(name = "name 1 ", icon = "icon 1 ", details = "details 1 "),
+                Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
+                Place(name = "name 3 ", icon = "icon 3 ", details = "details 3 "),
+                Place(name = "name 4 ", icon = "icon 4 ", details = "details 4 "),
+                Place(name = "name 1 ", icon = "icon 1 ", details = "details 1 "),
+                Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
+                Place(name = "name 3 ", icon = "icon 3 ", details = "details 3 "),
+                Place(name = "name 4 ", icon = "icon 4 ", details = "details 4 "),
             )
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Box(
+
+
+                Column  (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.sample_image),
-                        contentDescription = "Place Image",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                    // Overlay: Location tag
-                    Box(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.BottomStart)
-                    ) {
-                        Chip(
-                            label = { Text("Makkah", fontSize = 10.sp) },
-                            modifier = Modifier.size(50.dp),
-                            backgroundColor = Color(0xFF9C27B0),
-                            labelPadding = PaddingValues(4.dp),
-                            elevation = 0.dp
-                        )
+                        .fillMaxHeight()
+                        
+                )
+                {
+                    list.forEach {
+                        places(it)
                     }
                 }
 
-                // Title Section
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Text(
-                        text = "المسجد الحرام",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
+
 
             // Bottom Navigation Bar
 //            BottomNavigation(
@@ -266,21 +267,45 @@ fun CitySageScreen() {
         }
     }
 
-    // Reusable Category Button Component
+@Composable
+fun places(item: Place) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.LightGray // Change this to your desired color
+        )
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.sample_image),
+            contentDescription = "Place Image",
+            modifier = Modifier.height(50.dp).width(50.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)//.weight(2f),
+        )
+        Text(text = item.name)
+    }
+
+}
+
+// Reusable Category Button Component
     @Composable
-    fun CategoryButton(icon: ImageVector, text: String) {
+    fun CategoryButton(text: String) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                //.padding(8.dp)
                 .size(80.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = text,
-                modifier = Modifier.size(32.dp),
-                tint = Color(0xFF2196F3)
+            Image(
+                painter = painterResource(id = R.drawable.museum),
+                contentDescription = "Place Image",
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(50.dp)
+                    .padding(horizontal = 8.dp, vertical = 8.dp)//.weight(2f),
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
