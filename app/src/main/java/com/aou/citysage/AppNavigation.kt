@@ -64,7 +64,7 @@ fun AppNavigation() {
         ),
         NavItem(
             route = Screens.MyProfilePage,
-            label = "LAB",
+            label = "MyProfilePage",
             icon = Icons.Default.DateRange
         ),
 
@@ -131,11 +131,11 @@ fun AppNavigation() {
             {
                 FavoriteScreen()
             }
-            composable<Screens.FavoritePage>
+            composable<Screens.MyTripsPage>
             {
                 MyTripsScreen()
             }
-            composable<Screens.FavoritePage>
+            composable<Screens.MyProfilePage>
             {
                 MyProfileScreen()
             }
