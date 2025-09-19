@@ -45,7 +45,8 @@ import com.aou.citysage.screens.Login.Place
 
 @Composable
 @Preview(showSystemUi = true)
-fun HomeScreen() {
+fun HomeScreen()
+{
     val scrollState = rememberScrollState()
     // Use RTL if needed (for Arabic)
     Box(modifier = Modifier.fillMaxSize()) {
@@ -221,48 +222,6 @@ fun HomeScreen() {
                         places(it)
                     }
                 }
-
-
-
-            // Bottom Navigation Bar
-//            BottomNavigation(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 16.dp),
-//                backgroundColor = Color.White,
-//                elevation = 8.dp
-//            ) {
-//                BottomNavigationItem(
-//                    icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
-//                    label = { Text("اكتشف") },
-//                    selected = true,
-//                    onClick = {}
-//                )
-//                BottomNavigationItem(
-//                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
-//                    label = { Text("المفضلة") },
-//                    selected = false,
-//                    onClick = {}
-//                )
-//                BottomNavigationItem(
-//                    icon = { Icon(Icons.Default.CalendarToday, contentDescription = "Trips") },
-//                    label = { Text("رحلاتي") },
-//                    selected = false,
-//                    onClick = {}
-//                )
-//                BottomNavigationItem(
-//                    icon = { Icon(Icons.Default.Map, contentDescription = "Map") },
-//                    label = { Text("الخريطة") },
-//                    selected = false,
-//                    onClick = {}
-//                )
-//                BottomNavigationItem(
-//                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-//                    label = { Text("الملف الشخصي") },
-//                    selected = false,
-//                    onClick = {}
-//                )
-//            }
             }
         }
     }
@@ -289,7 +248,6 @@ fun places(item: Place) {
 
 }
 
-// Reusable Category Button Component
     @Composable
     fun CategoryButton(text: String) {
         Column(
