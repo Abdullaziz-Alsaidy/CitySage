@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +48,7 @@ fun FilterMenu(text: String= "D",index : Int=1){
 
 @Composable
 fun AppText(
+    italic: Boolean = false,
     text: String,
     fontSize: TextUnit = 16.sp, // Default size
     isBold: Boolean = false, // Default not bold
@@ -58,6 +60,7 @@ fun AppText(
         fontSize = fontSize,
         fontWeight = if (isBold) FontWeight.Bold else FontWeight.Normal,
         color = if (useGrayColor) Color.Gray else Color.Black,
-        modifier = modifier
+        modifier = modifier,
+        fontStyle = if(italic) FontStyle.Italic else FontStyle.Normal
     )
 }
