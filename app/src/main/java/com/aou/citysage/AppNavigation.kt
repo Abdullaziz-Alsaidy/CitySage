@@ -23,6 +23,7 @@ import com.aou.citysage.screens.Login.LoginScreen
 import com.aou.citysage.LoginViewModel
 import com.aou.citysage.Screens
 import com.aou.citysage.screens.favorite.FavoriteScreen
+import com.aou.citysage.screens.home.PlaceDetailsScreen
 import com.aou.citysage.screens.mytrips.MyTripsScreen
 import com.aou.citysage.screens.profile.MyProfileScreen
 
@@ -124,9 +125,21 @@ fun AppNavigation() {
                         { popUpTo<Screens.LoginPage> {inclusive = true} }
                     })
             }
-            composable<Screens.HomePage>
-            {
-                HomeScreen() }
+            composable<Screens.HomePage> {
+                HomeScreen(
+                    ToDetailsPage = { placeId ->
+                        navController.navigate(Screens.PlaceDetailsPage(placeID = placeId ))
+                    }
+                )
+            }
+
+
+
+            composable<Screens.PlaceDetailsPage>
+            { backStackEntry ->
+                val placeId = backStackEntry.arguments?.getString("placeID") ?: ""
+                PlaceDetailsScreen(placeId)
+            }
             composable<Screens.FavoritePage>
             {
                 FavoriteScreen()
@@ -139,6 +152,7 @@ fun AppNavigation() {
             {
                 MyProfileScreen()
             }
+
 
 
 
