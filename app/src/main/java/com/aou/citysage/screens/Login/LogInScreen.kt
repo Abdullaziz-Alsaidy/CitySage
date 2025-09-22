@@ -187,15 +187,7 @@ fun AlertDialogExample(
 
 
 
-data class Place(
-    val name :String= "details 1 ",
-    val icon: String= "details 1 ",
-    val details: String,
-    val distance :String= "details 1 ",
-    val rating: String= "details 1 ",
-    val free: String= "details 1 ",
-    val times : String= "details 1 "
-)
+
 //Card(
 //modifier = Modifier
 //.fillMaxWidth()

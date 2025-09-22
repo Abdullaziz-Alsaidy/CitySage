@@ -44,7 +44,8 @@ import androidx.compose.ui.unit.sp
 import com.aou.citysage.AppText
 import com.aou.citysage.FilterMenu
 import com.aou.citysage.R
-import com.aou.citysage.screens.Login.Place
+import com.aou.citysage.data.models.Place
+
 import com.aou.citysage.screens.favorite.FavoriteCard
 
 
@@ -114,18 +115,50 @@ fun MyTripsScreen() {
 
 
             val list = listOf(
-                Place(name = "رحله نهايه الاسبوع لجده", icon = "icon 1 ", details = "details 1 "),
-                Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
-                Place(name = "name 3 ", icon = "icon 3 ", details = "details 3 "),
-                Place(name = "name 4 ", icon = "icon 4 ", details = "details 4 "),
-                Place(name = "name 1 ", icon = "icon 1 ", details = "details 1 "),
-                Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
-                Place(name = "name 3 ", icon = "icon 3 ", details = "details 3 "),
-                Place(name = "name 4 ", icon = "icon 4 ", details = "details 4 "),
-                Place(name = "name 1 ", icon = "icon 1 ", details = "details 1 "),
-                Place(name = "name 2 ", icon = "icon 2 ", details = "details 2 "),
-                Place(name = "name 3 ", icon = "icon 3 ", details = "details 3 "),
-                Place(name = "name 4 ", icon = "icon 4 ", details = "details 4 "),
+                Place(
+                    name = "جبل عرفات",
+                    details = "Sacred Hill where pilgrims gather During Hajj",
+                    openTimes = "Always Open",
+                    rating = 4.8,
+                    distance = "20 km",
+                    price = 250,
+                    city = "Makkah"
+                ),Place(
+                    name = "جبل عرفات",
+                    details = "Sacred Hill where pilgrims gather During Hajj",
+                    openTimes = "Always Open",
+                    rating = 4.8,
+                    distance = "20 km",
+                    price = 250,
+                    city = "Makkah"
+                ),
+                Place(
+                    name = "جبل عرفات",
+                    details = "Sacred Hill where pilgrims gather During Hajj",
+                    openTimes = "Always Open",
+                    rating = 4.8,
+                    distance = "20 km",
+                    price = 250,
+                    city = "Makkah"
+                ),
+                Place(
+                    name = "جبل عرفات",
+                    details = "Sacred Hill where pilgrims gather During Hajj",
+                    openTimes = "Always Open",
+                    rating = 4.8,
+                    distance = "20 km",
+                    price = 250,
+                    city = "Makkah"
+                ),
+                Place(
+                    name = "جبل عرفات",
+                    details = "Sacred Hill where pilgrims gather During Hajj",
+                    openTimes = "Always Open",
+                    rating = 4.8,
+                    distance = "20 km",
+                    price = 250,
+                    city = "Makkah"
+                ),
             )
             Column  (
                 modifier = Modifier
