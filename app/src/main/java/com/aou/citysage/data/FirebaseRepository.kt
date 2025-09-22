@@ -26,10 +26,36 @@ class FirebaseRepository {
 
 
     suspend fun getPlaces(): List<Place> {
-        return db.collection("Places")
-            .get()
-            .await()
-            .toObjects(Place::class.java)
+        return try {
+            val snapshot = db.collection("Places").get().await()
+            snapshot.documents.mapNotNull { doc ->
+                doc.toObject(Place::class.java)?.copy(id = doc.id)
+            }.also {
+                Log.d("FirebaseRepository", "Fetched ${it.size} places: $it")
+            }
+        } catch (e: Exception) {
+            Log.e("FirebaseRepository", "Error fetching places: ${e.message}", e)
+            emptyList()
+        }
+    }
+    suspend fun getPlace(placeID: String): Place? {
+        return try {
+            val snapshot = db.collection("Places")
+                .document(placeID)
+                .get()
+                .await()
+            if (snapshot.exists()) {
+                val place = snapshot.toObject(Place::class.java)?.copy(id = snapshot.id)
+                Log.d("FirebaseRepository", "Fetched place with ID $placeID: $place")
+                place
+            } else {
+                Log.w("FirebaseRepository", "Place with ID $placeID does not exist")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("FirebaseRepository", "Error fetching place with ID $placeID: ${e.message}", e)
+            null
+        }
     }
 
     // ================= Hospitals =================

@@ -138,7 +138,7 @@ fun AppNavigation() {
             composable<Screens.PlaceDetailsPage>
             { backStackEntry ->
                 val placeId = backStackEntry.arguments?.getString("placeID") ?: ""
-                PlaceDetailsScreen(placeId)
+                PlaceDetailsScreen(placeID=placeId)
             }
             composable<Screens.FavoritePage>
             {

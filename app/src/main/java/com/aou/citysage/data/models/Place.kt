@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Place(
+    val  id: String ="",
     @PropertyName("name") val name: String = "",
     @PropertyName("details") val details: String = "",
     @PropertyName("openTimes") val openTimes: String = "",

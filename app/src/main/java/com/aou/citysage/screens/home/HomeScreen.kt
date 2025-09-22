@@ -1,5 +1,6 @@
 package com.aou.citysage.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +55,10 @@ import com.aou.citysage.R
 import com.aou.citysage.data.models.Place
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = HomeViewModel()) {
+fun HomeScreen(
+    viewModel: HomeViewModel = HomeViewModel(),
+    ToDetailsPage: (String) -> Unit
+) {
     val placesState by viewModel.placesState.collectAsState()
     val scrollState = rememberScrollState()
 
@@ -76,7 +80,9 @@ fun HomeScreen(viewModel: HomeViewModel = HomeViewModel()) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = {},
+                    onClick = {
+
+                    },
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF7857B2))
                 ) {
@@ -98,9 +104,12 @@ fun HomeScreen(viewModel: HomeViewModel = HomeViewModel()) {
 
             // City Tabs (Pill Buttons)
             Row(
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 horizontalArrangement = Arrangement.End
-            ) {
+            )
+            {
                 val cities = when (placesState) {
                     is PlacesState.Success -> {
                         val places = (placesState as PlacesState.Success).places
@@ -139,12 +148,15 @@ fun HomeScreen(viewModel: HomeViewModel = HomeViewModel()) {
                     .height(50.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
+            )
+            {
                 Icon(
                     painter = painterResource(id = R.drawable.filter_icon),
                     contentDescription = "Filter",
                     tint = Color(0xFF9C27B0),
-                    modifier = Modifier.size(24.dp).padding(end = 8.dp)
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp)
                 )
                 TextField(
                     value = "",
@@ -186,6 +198,7 @@ fun HomeScreen(viewModel: HomeViewModel = HomeViewModel()) {
                         modifier = Modifier.padding(16.dp)
                     )
                 }
+
             }
 
             // All Places Section
@@ -195,7 +208,9 @@ fun HomeScreen(viewModel: HomeViewModel = HomeViewModel()) {
                     else -> 0
                 }})",
                 fontSize = 18.sp,
-                modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .fillMaxWidth(),
                 textAlign = TextAlign.End
             )
 
@@ -211,7 +226,9 @@ fun HomeScreen(viewModel: HomeViewModel = HomeViewModel()) {
                             PlaceCard(
                                 item = place,
                                 onBookClick = {
-
+                                   // viewModel.fetchPlace(place.id)
+                                    ToDetailsPage(place.id)
+                                    Log.d("PlaceDetailsScreen", "Received placeID: ${place.id}")
                                 }
                             )
                         }
@@ -254,7 +271,8 @@ fun PlaceCard(item: Place, onBookClick: () -> Unit) {
             // Title
             Row (
                 modifier = Modifier
-                    .fillMaxWidth().padding(top = 15.dp, end = 15.dp),
+                    .fillMaxWidth()
+                    .padding(top = 15.dp, end = 15.dp),
                 horizontalArrangement = Arrangement.End
 
             )
@@ -271,8 +289,8 @@ fun PlaceCard(item: Place, onBookClick: () -> Unit) {
             // Location Row
             Row (
                 modifier = Modifier
-                    .fillMaxWidth().
-                    padding(end = 5.dp),
+                    .fillMaxWidth()
+                    .padding(end = 5.dp),
                 horizontalArrangement = Arrangement.End
             )
             {
@@ -300,8 +318,8 @@ fun PlaceCard(item: Place, onBookClick: () -> Unit) {
             // Date Row
             Row (
                 modifier = Modifier
-                    .fillMaxWidth().
-                    padding(top = 2.dp, end = 6.dp),
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, end = 6.dp),
                 horizontalArrangement = Arrangement.End,
 
                 ){
@@ -345,8 +363,8 @@ fun PlaceCard(item: Place, onBookClick: () -> Unit) {
             // Activity Planned
             Row (
                 modifier = Modifier
-                    .fillMaxWidth().
-                    padding(top = 2.dp, end = 6.dp),
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, end = 6.dp),
                 horizontalArrangement = Arrangement.End,
 
                 ){
@@ -444,8 +462,3 @@ fun CategoryButton(text: String) {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
-}

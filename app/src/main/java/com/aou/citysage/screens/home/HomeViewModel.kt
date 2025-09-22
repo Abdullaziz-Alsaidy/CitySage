@@ -10,17 +10,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel : ViewModel()
+{
 
     private val firebaseRepository = FirebaseRepository()
-
-    // State for appointment booking
-    private val _appointmentState = MutableStateFlow<AppointmentState>(AppointmentState.Idle)
-    val appointmentState: StateFlow<AppointmentState> = _appointmentState.asStateFlow()
 
     // State for places list
     private val _placesState = MutableStateFlow<PlacesState>(PlacesState.Loading)
     val placesState: StateFlow<PlacesState> = _placesState.asStateFlow()
+
+    //private val _placeState = MutableStateFlow<PlaceState>(PlaceState.Loading)
+    //val placeState: StateFlow<PlaceState> = _placeState.asStateFlow()
 
     init {
         fetchPlaces()
@@ -40,17 +40,15 @@ class HomeViewModel : ViewModel() {
     }
 
 
+
 }
 
-sealed class AppointmentState {
-    object Idle : AppointmentState()
-    object Loading : AppointmentState()
-    data class Success(val message: String) : AppointmentState()
-    data class Error(val message: String) : AppointmentState()
-}
+
 
 sealed class PlacesState {
     object Loading : PlacesState()
     data class Success(val places: List<Place>) : PlacesState()
     data class Error(val message: String) : PlacesState()
 }
+
+

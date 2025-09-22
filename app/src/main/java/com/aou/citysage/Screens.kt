@@ -18,6 +18,10 @@ sealed interface Screens {
 
     @Serializable
     data object MyProfilePage
+    @Serializable
+    data class PlaceDetailsPage(
+        val placeID : String
+    )
 
 
 }

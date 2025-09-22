@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,191 +39,84 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aou.citysage.AppText
 import com.aou.citysage.R
+import com.aou.citysage.data.models.Place
 
 @Composable
 fun PlaceDetailsScreen(
-    viewModel: HomeViewModel = HomeViewModel(),
-    placeID: String
-){
+    placeID: String,
+    viewModel: PlaceDetailsViewModel = viewModel()
+) {
+    Log.d("PlaceDetailsScreen", "Received placeID: $placeID")
+    val placeState by viewModel.placeState.collectAsState()
 
-        val placesState by viewModel.placesState.collectAsState()
-        val scrollState = rememberScrollState()
+    LaunchedEffect(placeID) {
+        viewModel.fetchPlace(placeID)
+    }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .fillMaxHeight()
-                    .verticalScroll(scrollState),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // App Header
-                Spacer(modifier = Modifier.height(15.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        when (placeState) {
+            is PlaceState.Success -> {
+                val place = (placeState as PlaceState.Success).place
+                Log.d("PlaceDetailsScreen", "Success state with place: ${place.name}")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Button(
-                        onClick = {
-                           // ToDetailsPage("6969")
-                        },
-                        shape = RoundedCornerShape(20.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF7857B2))
-                    ) {
-                        Text("EN", fontSize = 18.sp, color = Color.Black, fontStyle = FontStyle.Italic)
-                    }
-                    Column(
-                        modifier = Modifier.padding(end = 8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("CitySage", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                        Text(
-                            "Discover Saudi Arabia",
-                            fontSize = 14.sp,
-                            color = Color.Gray,
-                            fontStyle = FontStyle.Italic
-                        )
-                    }
-                }
-
-                // City Tabs (Pill Buttons)
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    val cities = when (placesState) {
-                        is PlacesState.Success -> {
-                            val places = (placesState as PlacesState.Success).places
-                            (places.map { it.city }.distinct() + "All Cities").reversed()
-                        }
-                        else -> listOf("Jeddah", "Makkah", "All Cities")
-                    }
-                    cities.forEachIndexed { index, city ->
-                        Button(
-                            onClick = { /* TODO: Implement city filter logic */ },
-                            modifier = Modifier
-                                .padding(horizontal = 4.dp)
-                                .padding(vertical = 8.dp),
-                            shape = RoundedCornerShape(20.dp),
-                            colors = when (city) {
-                                "Makkah" -> ButtonDefaults.buttonColors(
-                                    Color(0xFF9C27B0),
-                                    contentColor = Color.White
-                                )
-                                else -> ButtonDefaults.buttonColors(
-                                    Color(0xFFF5F5F5),
-                                    contentColor = Color.Gray
-                                )
-                            }
-                        ) {
-                            Text(city, fontSize = 14.sp)
-                        }
-                    }
-                }
-
-                // Search Bar
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 2.dp)
-                        .height(50.dp),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.filter_icon),
-                        contentDescription = "Filter",
-                        tint = Color(0xFF9C27B0),
-                        modifier = Modifier.size(24.dp).padding(end = 8.dp)
+                    Text(
+                        text = place.name,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
                     )
-                    TextField(
-                        value = "",
-                        onValueChange = { /* TODO: Implement search logic */ },
-                        placeholder = { Text("Search") },
-                        modifier = Modifier.weight(1f),
-                        textStyle = TextStyle(fontSize = 12.sp),
-                        singleLine = true,
-                        maxLines = 1,
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search",
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                    Text(
+                        text = place.details,
+                        fontSize = 16.sp,
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = "City: ${place.city}",
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "Rating: ${place.rating}",
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "Open: ${place.openTimes}",
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "Distance: ${place.distance}",
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "Price: ${place.price}",
+                        fontSize = 16.sp
                     )
                 }
-
-                // Category Buttons (Icons + Text)
-                when (placesState) {
-                    is PlacesState.Success -> {
-                        val places = (placesState as PlacesState.Success).places
-
-
-                        LazyRow {
-                            items(places) { place ->
-                                CategoryButton(place.name)
-                            }
-                        }
-                    }
-                    is PlacesState.Loading -> {
-                        CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-                    }
-                    is PlacesState.Error -> {
-                        Text(
-                            text = (placesState as PlacesState.Error).message,
-                            color = Color.Red,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
-
-                // All Places Section
+            }
+            is PlaceState.Loading -> {
+                CircularProgressIndicator()
+            }
+            is PlaceState.Error -> {
+                val errorMessage = (placeState as PlaceState.Error).message
+                Log.e("PlaceDetailsScreen", "Error: $errorMessage")
                 Text(
-                    text = "المنشآت (${when (placesState) {
-                        is PlacesState.Success -> (placesState as PlacesState.Success).places.size
-                        else -> 0
-                    }})",
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
-                    textAlign = TextAlign.End
+                    text = errorMessage,
+                    color = Color.Red,
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center
                 )
-
-                when (placesState) {
-                    is PlacesState.Success -> {
-                        val places = (placesState as PlacesState.Success).places
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight()
-                        ) {
-                            places.forEach { place ->
-                                PlaceCard(
-                                    item = place,
-                                    onBookClick = {
-
-                                    }
-                                )
-                            }
-                        }
-                    }
-                    is PlacesState.Loading -> {
-                        CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-                    }
-                    is PlacesState.Error -> {
-                        Text(
-                            text = (placesState as PlacesState.Error).message,
-                            color = Color.Red,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
             }
         }
     }
+}
+
 
