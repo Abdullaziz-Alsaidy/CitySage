@@ -70,7 +70,7 @@ fun AppText(
 }
 
 @Composable
-fun GetTheRightImage(placeName: String){
+fun GetTheRightImage(placeName: String ="جبل عرفات"){
     var imageHolder:Int =5
     if (placeName == "جبل عرفات"){
         imageHolder = R.drawable.quran
