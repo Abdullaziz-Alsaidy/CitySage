@@ -1,5 +1,6 @@
 package com.aou.citysage.screens.home
 
+import android.R.attr.navigationIcon
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -71,6 +73,7 @@ import coil.compose.AsyncImage
 import com.aou.citysage.AppText
 import com.aou.citysage.GetTheRightImage
 import com.aou.citysage.R
+import com.aou.citysage.data.models.Constant_Place
 import com.aou.citysage.data.models.Place
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -90,15 +93,14 @@ fun PlaceDetailsScreen(
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
+            //.padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         when (placeState) {
             is PlaceState.Success -> {
                 val place = (placeState as PlaceState.Success).place
-                Log.d("PlaceDetailsScreen", "Success state with place: ${place.name}")
-                PlaceDetailsScreen(place)
+                PlaceDetailsComponent(place)
             }
             is PlaceState.Loading -> {
                 CircularProgressIndicator()
@@ -119,20 +121,23 @@ fun PlaceDetailsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
-fun PlaceDetailsScreen(place: Place = Place()) {
+//@Preview
+fun PlaceDetailsComponent(place: Place = Constant_Place) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Activity Details") },
-                navigationIcon = {
-                    IconButton(onClick = { /* Navigate back */ }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        },
+                TopAppBar(
+                title = { AppText(
+                    text = place.name,
+                    fontSize = 18.sp,
+                    isBold = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        //.padding(top = 8.dp)
+                ) },
+            ) }
+        ,
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { /* Navigate to booking screen */ },

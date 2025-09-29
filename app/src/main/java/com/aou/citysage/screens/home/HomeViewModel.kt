@@ -27,10 +27,13 @@ class HomeViewModel : ViewModel()
     }
 
     fun fetchPlaces() {
+        Log.d("FAPI","fetchPlaces1")
         viewModelScope.launch {
             _placesState.value = PlacesState.Loading
+            Log.d("FAPI","PlacesState.Loading")
             try {
                 val places = firebaseRepository.getPlaces()
+                Log.d("FAPI","${places}")
                 _placesState.value = PlacesState.Success(places)
             } catch (e: Exception) {
                 _placesState.value = PlacesState.Error("Failed to fetch places: ${e.message}")
