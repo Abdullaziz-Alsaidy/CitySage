@@ -26,15 +26,17 @@ class FirebaseRepository {
 
 
     // New funcs
-    fun testid(){
-        if (user != null) {
-            val uid = user.uid
-            println("User ID (UID): $uid")
-            Log.d("User##", uid)
-            // Now you can use this 'uid' for database operations or other logic
-        } else {
-            // No user is currently signed in
-            Log.d("User##", "No id")
+    suspend fun getBookings(): List<Booking> {
+        return try {
+            val snapshot = db.collection("Bookings").get().await()
+            snapshot.documents.mapNotNull { doc ->
+                doc.toObject(Booking::class.java)?.copy(id = doc.id)
+            }.also {
+                Log.d("FirebaseRepository", "Fetched ${it.size} places: $it")
+            }
+        } catch (e: Exception) {
+            Log.e("FirebaseRepository", "Error fetching places: ${e.message}", e)
+            emptyList()
         }
     }
     suspend fun createBooking(

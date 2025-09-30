@@ -32,6 +32,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,9 +43,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aou.citysage.AppText
 import com.aou.citysage.FilterMenu
 import com.aou.citysage.R
+import com.aou.citysage.data.models.Booking
 import com.aou.citysage.data.models.Place
 
 import com.aou.citysage.screens.favorite.FavoriteCard
@@ -51,10 +55,12 @@ import com.aou.citysage.screens.favorite.FavoriteCard
 
 
 @Composable
-@Preview(showSystemUi = true)
-fun MyTripsScreen() {
+fun MyTripsScreen(
+    viewModel: MyTripsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val scrollState = rememberScrollState()
-    // Use RTL if needed (for Arabic)
+    val bookingState by viewModel.bookingState.collectAsState()
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -63,13 +69,11 @@ fun MyTripsScreen() {
                 .fillMaxWidth()
                 .padding(8.dp)
                 .fillMaxHeight()
-                .verticalScroll(scrollState)
-            ,
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
-        )
-        {
-            // App Header
+        ) {
+            // Header
             Spacer(modifier = Modifier.height(15.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -77,15 +81,13 @@ fun MyTripsScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = {},
+                    onClick = { /* Navigate to new trip */ },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF2196F3)
                     )
-
                 ) {
-
                     Text(text = "New Trip  ")
-                    Text(text = "+",fontSize = 15.sp)
+                    Text(text = "+", fontSize = 15.sp)
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Column(
@@ -93,121 +95,88 @@ fun MyTripsScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("رحلاتي", fontSize = 45.sp, fontWeight = FontWeight.Bold)
-
                 }
             }
 
-            // City Tabs (Pill Buttons)
+            // Category Tabs
             Row(
-                modifier = Modifier.fillMaxWidth().height(80.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp),
                 horizontalArrangement = Arrangement.Center,
-
-                ) {
-                val categories = listOf("Today", "Past Trips"," Upcoming" )
-
+            ) {
+                val categories = listOf("Today", "Past Trips", "Upcoming")
                 categories.forEach {
                     FilterMenu(text = it)
                 }
-
             }
 
+            // Booking List
+            when (bookingState) {
+                is BookingsState.Loading -> {
+                    Text("Loading...", fontSize = 18.sp)
+                }
 
+                is BookingsState.Error -> {
+                    Text(
+                        text = (bookingState as BookingsState.Error).message,
+                        color = Color.Red,
+                        fontSize = 16.sp
+                    )
+                }
 
-
-            val list = listOf(
-                Place(
-                    name = "جبل عرفات",
-                    details = "Sacred Hill where pilgrims gather During Hajj",
-                    openTimes = "Always Open",
-                    rating = 4.8,
-                    distance = "20 km",
-                    price = 250,
-                    city = "Makkah"
-                ),Place(
-                    name = "جبل عرفات",
-                    details = "Sacred Hill where pilgrims gather During Hajj",
-                    openTimes = "Always Open",
-                    rating = 4.8,
-                    distance = "20 km",
-                    price = 250,
-                    city = "Makkah"
-                ),
-                Place(
-                    name = "جبل عرفات",
-                    details = "Sacred Hill where pilgrims gather During Hajj",
-                    openTimes = "Always Open",
-                    rating = 4.8,
-                    distance = "20 km",
-                    price = 250,
-                    city = "Makkah"
-                ),
-                Place(
-                    name = "جبل عرفات",
-                    details = "Sacred Hill where pilgrims gather During Hajj",
-                    openTimes = "Always Open",
-                    rating = 4.8,
-                    distance = "20 km",
-                    price = 250,
-                    city = "Makkah"
-                ),
-                Place(
-                    name = "جبل عرفات",
-                    details = "Sacred Hill where pilgrims gather During Hajj",
-                    openTimes = "Always Open",
-                    rating = 4.8,
-                    distance = "20 km",
-                    price = 250,
-                    city = "Makkah"
-                ),
-            )
-            Column  (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-
-            )
-            {
-                list.forEach {
-                    MyTripsCard(it)
+                is BookingsState.Success -> {
+                    val bookings = (bookingState as BookingsState.Success).bookings
+                    if (bookings.isEmpty()) {
+                        Text("No trips found", fontSize = 18.sp)
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                        ) {
+                            bookings.forEach { booking ->
+                                MyTripsCard(booking)
+                            }
+                        }
+                    }
                 }
             }
-
         }
     }
 }
 
+
 @Composable
-fun MyTripsCard(item: Place) {
+fun MyTripsCard(item: Booking) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 5.dp, vertical = 8.dp,),
+            .padding(horizontal = 5.dp, vertical = 8.dp),
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.LightGray // Change this to your desired color
+            containerColor = Color.LightGray
         )
-    ){
+    ) {
         Image(
-            painter = painterResource(id = R.drawable.quran),
+            painter = painterResource(id = R.drawable.quran), // Replace with booking.place image if available
             contentDescription = "Place Image",
         )
-        Column   (
+        Column(
             modifier = Modifier
                 .height(140.dp)
                 .background(Color(0xFFF5F5F5))
                 .fillMaxWidth()
-        ){
-
-            // Title
-            Row (
+        ) {
+            // Title (Booking ID or Place ID)
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth().padding(top = 15.dp, end = 15.dp),
+                    .fillMaxWidth()
+                    .padding(top = 15.dp, end = 15.dp),
                 horizontalArrangement = Arrangement.End
-
-            )
-            {
+            ) {
                 AppText(
-                    text = item.name,
+                    text = "Booking #${item.id}",
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(end = 4.dp),
@@ -215,46 +184,40 @@ fun MyTripsCard(item: Place) {
                     isBold = true
                 )
             }
-            // Location Row
-            Row (
+
+            // Location (placeholder until Place details are joined)
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth().
-                    padding(end = 5.dp),
+                    .fillMaxWidth()
+                    .padding(end = 5.dp),
                 horizontalArrangement = Arrangement.End
-            )
-            {
+            ) {
                 AppText(
-                    text = "Jeddah, Saudi Arabia",
+                    text = "Place: ${item.placeId}",
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(end = 1.dp),
                     fontSize = 12.sp,
                     useGrayColor = true
-
-                    )
+                )
                 Icon(
-                    imageVector = Icons.Outlined.LocationOn, // Material icon for a clock/timer
+                    imageVector = Icons.Outlined.LocationOn,
                     contentDescription = "Location",
-                    // tint = Color(0xFFE0D57A),
                     modifier = Modifier
                         .size(25.dp)
                         .padding(end = 8.dp)
-
                 )
-
             }
 
-            // Date Row
-            Row (
+            // Date + Travelers
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth().
-                    padding(top = 2.dp, end = 6.dp),
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, end = 6.dp),
                 horizontalArrangement = Arrangement.End,
-
-            ){
-             //   Spacer(modifier = Modifier.weight(1f))
+            ) {
                 AppText(
-                    text = "Travelers 2",
+                    text = "Travelers ${item.numberOfPeople}",
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(end = 2.dp, start = 5.dp),
@@ -262,70 +225,48 @@ fun MyTripsCard(item: Place) {
                     useGrayColor = true
                 )
                 Icon(
-                    imageVector = Icons.Outlined.Face, // Material icon for a clock/timer
-                    contentDescription = "Location",
-                    // tint = Color(0xFFE0D57A),
+                    imageVector = Icons.Outlined.Face,
+                    contentDescription = "Travelers",
                     modifier = Modifier
                         .size(25.dp)
                         .padding(end = 8.dp)
-
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 AppText(
-                    text = "Dec 15 - Dec 18",
+                    text = "${item.bookingDate} (${item.startTime} - ${item.endTime})",
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(end = 15.dp),
                     fontSize = 12.sp,
                     useGrayColor = true
-                    )
+                )
                 Icon(
-                    imageVector = Icons.Outlined.DateRange, // Material icon for a clock/timer
-                    contentDescription = "Location",
-                    // tint = Color(0xFFE0D57A),
+                    imageVector = Icons.Outlined.DateRange,
+                    contentDescription = "Date",
                     modifier = Modifier
                         .size(25.dp)
                         .padding(end = 8.dp)
-
                 )
             }
-            // Activity Planned
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth().
-                    padding(top = 2.dp, end = 6.dp),
-                horizontalArrangement = Arrangement.End,
 
-                ){
-                IconButton (
-                    onClick = {},
-                    // tint = Color(0xFFE0D57A),
-                    modifier = Modifier
-                        .size(25.dp)
-                        .padding(start = 8.dp)
-                ){
-                    Icon(
-                        imageVector = Icons.Filled.ArrowForward,
-                        contentDescription = "Settings"
-                    )
-                }
+            // Status row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, end = 6.dp),
+                horizontalArrangement = Arrangement.End,
+            ) {
                 Spacer(modifier = Modifier.weight(1f))
                 AppText(
-                    text = "8 Activity Planned",
+                    text = "Status: ${item.status}",
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .padding(end = 8.dp, start = 5.dp, top = 10.dp, bottom = 5.dp),
+                        .padding(end = 8.dp, start = 5.dp),
                     fontSize = 12.sp,
                     isBold = true,
                     italic = true
-                   // useGrayColor = true
                 )
-
             }
-
-
-
         }
     }
-
 }
