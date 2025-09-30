@@ -24,8 +24,7 @@ class LoginViewModel(
     private val auth: FirebaseAuth = Firebase.auth
 ) : ViewModel()
 {
-    var showProfileDialog by mutableStateOf(false)
-        private set
+
     var firstName by mutableStateOf("")
         private set
 
@@ -82,7 +81,7 @@ class LoginViewModel(
                     .get()
                     .await()
                 if (!doc.exists()) {
-                    showProfileDialog = true
+                  //  showProfileDialog = true
                 } else {
                     _loginState.value = UiState.Success(emptyList())
                 }
@@ -118,25 +117,7 @@ class LoginViewModel(
     }
 
     fun saveUserProfile() {
-        viewModelScope.launch {
-            val userId = auth.currentUser?.uid ?: return@launch
-            val userProfile = UserProfile(
-                uid = userId,
-                firstName = firstName,
-                lastName = lastName,
-                phone = phone,
-                email = email // Use the existing email from login
-            )
-            try {
-                firestore.collection("Users").document(userId)
-                    .set(userProfile)
-                    .await()
-                showProfileDialog = false
-                _loginState.value = UiState.Success(emptyList())
-            } catch (e: Exception) {
-                _loginState.value = UiState.Error("Failed to save profile: ${e.message}")
-            }
-        }
+
     }
 
     override fun onCleared() {

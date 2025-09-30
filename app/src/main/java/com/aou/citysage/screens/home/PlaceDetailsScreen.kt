@@ -25,6 +25,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -34,6 +35,8 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -47,12 +50,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +69,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,10 +79,14 @@ import coil.compose.AsyncImage
 import com.aou.citysage.AppText
 import com.aou.citysage.GetTheRightImage
 import com.aou.citysage.R
+import com.aou.citysage.Utilitie.AnimatedTransitionDialog
+import com.aou.citysage.data.models.Booking
 import com.aou.citysage.data.models.Constant_Place
 import com.aou.citysage.data.models.Place
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPagerIndicator
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
 @Preview
@@ -84,11 +94,16 @@ fun PlaceDetailsScreen(
     placeID: String = "999",
     viewModel: PlaceDetailsViewModel = viewModel()
 ) {
+    val bookingDate = remember { mutableStateOf("") }
+    val startTime = remember { mutableStateOf("") }
+    val numberOfPeople = remember { mutableStateOf("1") }
+
     Log.d("PlaceDetailsScreen", "Received placeID: $placeID")
     val placeState by viewModel.placeState.collectAsState()
 
     LaunchedEffect(placeID) {
         viewModel.fetchPlace(placeID)
+        viewModel.testuuid()
     }
 
     Box(
@@ -100,7 +115,90 @@ fun PlaceDetailsScreen(
         when (placeState) {
             is PlaceState.Success -> {
                 val place = (placeState as PlaceState.Success).place
-                PlaceDetailsComponent(place)
+                PlaceDetailsComponent(place,viewModel)
+                if (viewModel.showDialog) {
+                    AnimatedTransitionDialog(
+                        onDismissRequest = { viewModel.onDismissDialog() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .verticalScroll(rememberScrollState()),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                Text(
+                                    text = "Book ${place.name}",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                TextField(
+                                    value = bookingDate.value,
+                                    onValueChange = { bookingDate.value = it },
+                                    label = { Text("Booking Date (YYYY-MM-DD)") },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                TextField(
+                                    value = startTime.value,
+                                    onValueChange = { startTime.value = it },
+                                    label = { Text("Start Time (HH:MM)") },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                TextField(
+                                    value = numberOfPeople.value,
+                                    onValueChange = { numberOfPeople.value = it },
+                                    label = { Text("Number of People") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                                )
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    TextButton(
+                                        onClick = { viewModel.onDismissDialog() }
+                                    ) {
+                                        Text("Cancel")
+                                    }
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Button(
+                                        onClick = {
+                                            viewModel.onConfirmBooking(
+                                                Booking(
+                                                    placeId = place.id,
+                                                    userId = "current_user_id", // Replace with actual user ID
+                                                    bookingDate = bookingDate.value,
+                                                    startTime = startTime.value,
+                                                    numberOfPeople = numberOfPeople.value.toIntOrNull()
+                                                        ?: 1,
+                                                    duration = place.duration,
+                                                    totalPrice = place.price * (numberOfPeople.value.toIntOrNull()
+                                                        ?: 1),
+                                                    createdAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
+                                                        Date()
+                                                    )
+                                                )
+                                            )
+                                        },
+                                        enabled = bookingDate.value.isNotBlank() && startTime.value.isNotBlank() && numberOfPeople.value.isNotBlank()
+                                    ) {
+                                        Text("Confirm")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             is PlaceState.Loading -> {
                 CircularProgressIndicator()
@@ -122,7 +220,7 @@ fun PlaceDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //@Preview
-fun PlaceDetailsComponent(place: Place = Constant_Place) {
+fun PlaceDetailsComponent(place: Place = Constant_Place, viewModel: PlaceDetailsViewModel) {
 
     Scaffold(
         topBar = {
@@ -140,7 +238,10 @@ fun PlaceDetailsComponent(place: Place = Constant_Place) {
         ,
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { /* Navigate to booking screen */ },
+                onClick = {
+                    // here
+                    viewModel.onBookClick()
+                },
                 icon = { Icon(Icons.Default.LocationOn, contentDescription = "Book") },
                 text = { Text("Book Now") }
             )

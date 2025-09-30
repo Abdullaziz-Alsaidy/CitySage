@@ -91,49 +91,6 @@ fun LoginScreen(
         }
 
         // Profile Dialog
-        if (viewModel.showProfileDialog) {
-            AlertDialogExample(
-                onDismissRequest = { /* Prevent dismissal */ },
-                onConfirmation = {
-                    viewModel.saveUserProfile()
-                },
-                dialogTitle = "Complete Your Profile",
-                dialogText = "Please provide your profile information",
-                icon = Icons.Default.Info,
-                isConfirmEnabled = viewModel.firstName.isNotBlank() &&
-                        viewModel.lastName.isNotBlank() &&
-                        viewModel.phone.isNotBlank(),
-
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OutlinedTextField(
-                        value = viewModel.firstName,
-                        onValueChange = viewModel::updateFirstName,
-                        label = { Text("First Name") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = viewModel.lastName,
-                        onValueChange = viewModel::updateLastName,
-                        label = { Text("Last Name") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = viewModel.phone,
-                        onValueChange = viewModel::updatePhone,
-                        label = { Text("Phone Number") },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Phone,
-                            imeAction = ImeAction.Done
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-        }
 
         // Error Message
         if (loginState is UiState.Error) {

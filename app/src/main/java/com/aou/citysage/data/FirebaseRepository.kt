@@ -1,9 +1,11 @@
 package com.aou.citysage.data
 
 import android.util.Log
+import com.aou.citysage.data.models.Booking
 import com.aou.citysage.data.models.Place
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.uni.sehhaty.Utilitie.Appointment
@@ -15,6 +17,7 @@ import kotlinx.coroutines.tasks.await
 class FirebaseRepository {
     private val auth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = Firebase.firestore
+    val user: FirebaseUser? = auth.currentUser
 
     // Get current user ID (from Firebase Authentication)
     private val currentUserId: String?
@@ -23,7 +26,39 @@ class FirebaseRepository {
 
 
     // New funcs
-
+    fun testid(){
+        if (user != null) {
+            val uid = user.uid
+            println("User ID (UID): $uid")
+            Log.d("User##", uid)
+            // Now you can use this 'uid' for database operations or other logic
+        } else {
+            // No user is currently signed in
+            Log.d("User##", "No id")
+        }
+    }
+    suspend fun createBooking(
+        booking: Booking
+    )  {
+        if (user != null) {
+            val uid = user.uid
+            println("User ID (UID): $uid")
+            Log.d("User##", uid)
+            // Now you can use this 'uid' for database operations or other logic
+        } else {
+            // No user is currently signed in
+            Log.d("User##", "No id")
+        }
+// Add a new document with a generated ID
+        db.collection("Bookings")
+            .add(booking)
+            .addOnSuccessListener { documentReference ->
+                Log.d("DocumentSnapshot","DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.d("DocumentSnapshot","error ${e.message}")
+            }
+    }
 
     suspend fun getPlaces(): List<Place> {
         return try {
@@ -125,20 +160,7 @@ class FirebaseRepository {
     }
 
     // ================= Appointments =================
-    suspend fun createAppointment(
-        place: Place
-    )  {
 
-// Add a new document with a generated ID
-        db.collection("Places")
-            .add(place)
-            .addOnSuccessListener { documentReference ->
-                Log.d("DocumentSnapshot","DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.d("DocumentSnapshot","error ${e.message}")
-            }
-    }
 
     suspend fun getUserAppointments():
             List<Appointment> {
