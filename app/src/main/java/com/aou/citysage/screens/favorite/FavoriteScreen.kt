@@ -1,5 +1,6 @@
 package com.aou.citysage.screens.favorite
 
+import android.R.attr.category
 import android.R.attr.iconTint
 import android.content.res.Resources
 import androidx.compose.foundation.Image
@@ -35,6 +36,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,6 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Colors
 import com.aou.citysage.AppText
 import com.aou.citysage.FilterMenu
@@ -55,9 +59,11 @@ import com.aou.citysage.data.models.Place
 
 
 @Composable
-@Preview(showSystemUi = true)
-fun FavoriteScreen() {
+fun FavoriteScreen(
+    viewModel: FavoriteViewModel = viewModel()
+) {
     val scrollState = rememberScrollState()
+    val selectedFilter by viewModel.selectedFilter.collectAsState()
     // Use RTL if needed (for Arabic)
     Box(
         modifier = Modifier.fillMaxSize()
@@ -111,7 +117,11 @@ fun FavoriteScreen() {
                 ) {
                     // Use `items` to iterate over a list
                     items(categories) { item ->
-                        FilterMenu(item)
+                        FilterMenu(
+                            item,
+                           // isSelected = false,
+                            onClick = {}
+                        )
                     }
                     // You can also add a single item using `item`
                     item {

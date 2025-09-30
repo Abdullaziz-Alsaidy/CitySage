@@ -1,5 +1,7 @@
 package com.aou.citysage.screens.mytrips
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -46,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aou.citysage.AppText
 import com.aou.citysage.FilterMenu
+import com.aou.citysage.FilterMenu1
 import com.aou.citysage.R
 import com.aou.citysage.data.models.Booking
 import com.aou.citysage.data.models.Place
@@ -54,12 +58,14 @@ import com.aou.citysage.screens.favorite.FavoriteCard
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyTripsScreen(
     viewModel: MyTripsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val scrollState = rememberScrollState()
     val bookingState by viewModel.bookingState.collectAsState()
+    val selectedFilter by viewModel.selectedFilter.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -99,15 +105,14 @@ fun MyTripsScreen(
             }
 
             // Category Tabs
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                val categories = listOf("Today", "Past Trips", "Upcoming")
-                categories.forEach {
-                    FilterMenu(text = it)
+            val categories = listOf("Today", "Past Trips", "Upcoming")
+            Row {
+                categories.forEachIndexed { index, category ->
+                    FilterMenu1(
+                        text = category,
+                        isSelected = selectedFilter == category,
+                        onClick = { viewModel.setFilter(category) }
+                    )
                 }
             }
 

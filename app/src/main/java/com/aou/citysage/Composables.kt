@@ -20,35 +20,42 @@ import com.google.common.collect.Multimaps.index
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 @Composable
-@Preview
-fun FilterMenu(text: String= "D",index : Int=1){
-    Button(
-        onClick = {},
+fun FilterMenu(
+    text: String,
+   // isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Button( onClick = onClick,
         modifier = Modifier
             .padding(horizontal = 4.dp)
             .padding(vertical = 8.dp),
-        //.width(80.dp),
         shape = RoundedCornerShape(20.dp),
-        colors = when (index) {
-            1 ->
-                ButtonDefaults.buttonColors(
-                    Color(0xFFC0C9C3),
-                    contentColor = Color.White
-                )
-
-            else -> ButtonDefaults.buttonColors(
-                Color(0xFFF5F5F5),
-                contentColor = Color.Gray
-            )
-        }
-    ) {
-        Text(text, fontSize = 14.sp)
-    }
-}
+        colors = if (true) {
+            ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3),
+            contentColor = Color.White )
+        } else {
+            ButtonDefaults.buttonColors( containerColor = Color(0xFFF5F5F5),
+                contentColor = Color.Gray ) } )
+    { Text(text, fontSize = 14.sp) } }
 
 
-
-
+@Composable
+fun FilterMenu1(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Button( onClick = onClick,
+        modifier = Modifier
+            .padding(horizontal = 4.dp)
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = if (isSelected) {ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3),
+            contentColor = Color.White )
+        } else {
+            ButtonDefaults.buttonColors( containerColor = Color(0xFFF5F5F5),
+                contentColor = Color.Gray ) } )
+    { Text(text, fontSize = 14.sp) } }
 
 @Composable
 fun AppText(
