@@ -400,6 +400,34 @@ fun PlaceCard(item: Place, onBookClick: () -> Unit) {
     }
 
 }
+
+
+@Composable
+fun CategoryButton(text: String) {
+    Column(
+        modifier = Modifier
+            .size(80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.museum),
+            contentDescription = "Category Image",
+            modifier = Modifier
+                .height(50.dp)
+                .width(50.dp)
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = text,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center,
+            maxLines = 1
+        )
+    }
+}
+
 @Composable
 fun Places(item: Place, onBookClick: () -> Unit) {
     Card(
@@ -435,30 +463,3 @@ fun Places(item: Place, onBookClick: () -> Unit) {
         }
     }
 }
-
-@Composable
-fun CategoryButton(text: String) {
-    Column(
-        modifier = Modifier
-            .size(80.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.museum),
-            contentDescription = "Category Image",
-            modifier = Modifier
-                .height(50.dp)
-                .width(50.dp)
-                .padding(horizontal = 8.dp, vertical = 8.dp)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = text,
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center,
-            maxLines = 1
-        )
-    }
-}
-
