@@ -18,13 +18,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlin.text.set
 
 
 class LoginViewModel(
     private val auth: FirebaseAuth = Firebase.auth
 ) : ViewModel()
 {
-
+    var showProfileDialog by mutableStateOf(false)
+        private set
     var firstName by mutableStateOf("")
         private set
 
@@ -81,9 +83,10 @@ class LoginViewModel(
                     .get()
                     .await()
                 if (!doc.exists()) {
-                  //  showProfileDialog = true
+                    showProfileDialog = true
                 } else {
                     _loginState.value = UiState.Success(emptyList())
+                 //   _loginState.value = UiState.Success(emptyList())
                 }
             } catch (e: Exception) {
                 _loginState.value = UiState.Error("Error checking profile: ${e.message}")
@@ -108,7 +111,7 @@ class LoginViewModel(
                 Log.d("T!@#","User @Uid:${result.user?.uid}")
                 // NEW: Check/create user doc on manual login
                 result.user?.uid?.let { checkOrCreateUserDoc(it) }
-                _loginState.value = UiState.Success(emptyList())
+
             } catch (e: Exception)
             {
                 _loginState.value = UiState.Error(e.message ?: "Login failed")
@@ -117,7 +120,26 @@ class LoginViewModel(
     }
 
     fun saveUserProfile() {
-
+        viewModelScope.launch {
+            val userId = auth.currentUser?.uid ?: return@launch
+            val authEmail = auth.currentUser?.email ?: ""
+            val userProfile = UserProfile(
+               // uid = userId,
+                firstName = firstName,
+                lastName = lastName,
+                phone = phone,
+                email = authEmail // Use the existing email from login
+            )
+            try {
+                firestore.collection("Users").document(userId)
+                    .set(userProfile)
+                    .await()
+                showProfileDialog = false
+                _loginState.value = UiState.Success(emptyList())
+            } catch (e: Exception) {
+                _loginState.value = UiState.Error("Failed to save profile: ${e.message}")
+            }
+        }
     }
 
     override fun onCleared() {

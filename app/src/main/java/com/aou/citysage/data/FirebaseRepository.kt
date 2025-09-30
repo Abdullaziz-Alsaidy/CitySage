@@ -44,22 +44,22 @@ class FirebaseRepository {
     )  {
         if (user != null) {
             val uid = user.uid
-            println("User ID (UID): $uid")
-            Log.d("User##", uid)
-            // Now you can use this 'uid' for database operations or other logic
+            booking.id = uid
+            db.collection("Bookings")
+                .add(booking)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("DocumentSnapshot","DocumentSnapshot added with ID: ${documentReference.id}")
+                }
+                .addOnFailureListener { e ->
+                    Log.d("DocumentSnapshot","error ${e.message}")
+                }
+
         } else {
             // No user is currently signed in
             Log.d("User##", "No id")
         }
 // Add a new document with a generated ID
-        db.collection("Bookings")
-            .add(booking)
-            .addOnSuccessListener { documentReference ->
-                Log.d("DocumentSnapshot","DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.d("DocumentSnapshot","error ${e.message}")
-            }
+
     }
 
     suspend fun getPlaces(): List<Place> {
@@ -221,7 +221,7 @@ class FirebaseRepository {
         val email = auth.currentUser?.email ?: ""
 
         val userProfile = UserProfile(
-            uid = userId,
+           // uid = userId,
             firstName = firstName,
             lastName = lastName,
             phone = phone,

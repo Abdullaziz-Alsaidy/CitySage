@@ -28,7 +28,7 @@ data class Place(
 )
 
 data class Booking(
-    val id: String = "",
+    var id: String = "",
     // Link to the booked Place
     @PropertyName("placeId") val placeId: String = "",
     // Link to the user making the booking

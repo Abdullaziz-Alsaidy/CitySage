@@ -22,6 +22,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Face
@@ -260,7 +262,20 @@ fun PlaceCard(item: Place, onBookClick: () -> Unit) {
 
         ), onClick = onBookClick
     ){
-        GetTheRightImage(item.name)
+        Box {
+            GetTheRightImage(item.name)
+            val isFavorite = false
+            Icon(
+                imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                contentDescription = "Favorite",
+                tint = if (isFavorite) Color.Red else Color.White,
+
+                        modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(8.dp)
+                    .size(28.dp)
+            )
+        }
         Column   (
             modifier = Modifier
                 .height(140.dp)

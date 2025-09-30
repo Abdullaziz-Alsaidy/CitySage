@@ -44,7 +44,7 @@ data class Appointment(
 // Optional: User profile data (separate from auth)
 @Serializable
 data class UserProfile(
-    val uid: String = "",  // Matches Firebase Auth UID
+   // val uid: String = "",  // Matches Firebase Auth UID
     val firstName: String = "",
     val lastName: String = "",
     val phone: String = "",
