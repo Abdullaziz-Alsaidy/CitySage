@@ -28,9 +28,6 @@ class PlaceDetailsViewModel : ViewModel()
     fun onDismissDialog() { showDialog = false }
     fun onBookClick() { showDialog = true }
 
-    fun testuuid(){
-        firebaseRepository.testid()
-    }
     fun fetchPlace(placeID: String) {
         viewModelScope.launch {
             _placeState.value = PlaceState.Loading
