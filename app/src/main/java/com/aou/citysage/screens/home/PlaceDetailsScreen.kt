@@ -103,7 +103,6 @@ fun PlaceDetailsScreen(
 
     LaunchedEffect(placeID) {
         viewModel.fetchPlace(placeID)
-        viewModel.testuuid()
     }
 
     Box(
