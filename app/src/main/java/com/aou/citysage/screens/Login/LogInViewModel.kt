@@ -128,7 +128,8 @@ class LoginViewModel(
                 firstName = firstName,
                 lastName = lastName,
                 phone = phone,
-                email = authEmail // Use the existing email from login
+                email = authEmail, // Use the existing email from login
+                bookings = emptyList()
             )
             try {
                 firestore.collection("Users").document(userId)
