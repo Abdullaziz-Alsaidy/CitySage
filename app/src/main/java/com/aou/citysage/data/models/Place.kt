@@ -46,5 +46,6 @@ data class Booking(
     @PropertyName("status") val status: String = "PENDING", // e.g., "PENDING", "CONFIRMED", "CANCELLED"
 
     // Metadata
-    @PropertyName("createdAt") val createdAt: String = "" // Timestamp of when the booking was created
+    @PropertyName("createdAt") val createdAt: String = "", // Timestamp of when the booking was created
+    var isFavorite: Boolean = false
 )

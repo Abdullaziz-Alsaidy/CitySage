@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel()
 {
-
+    private val _myValue = MutableStateFlow(false)
+    val myValue: StateFlow<Boolean> = _myValue.asStateFlow()
     private val firebaseRepository = FirebaseRepository()
 
     // State for places list
@@ -25,7 +26,12 @@ class HomeViewModel : ViewModel()
     init {
         fetchPlaces()
     }
-
+    fun toggleMyValue() {
+        // ViewModel logic to update the state
+        _myValue.value = !_myValue.value
+        // You can also add logging here if needed for ViewModel-level debugging
+        // Log.d("MyViewModel", "Toggled to ${_myValue.value}")
+    }
     fun fetchPlaces() {
         Log.d("FAPI","fetchPlaces1")
         viewModelScope.launch {
@@ -39,6 +45,12 @@ class HomeViewModel : ViewModel()
                 _placesState.value = PlacesState.Error("Failed to fetch places: ${e.message}")
                 Log.e("HomeViewModel", "Error fetching places", e)
             }
+        }
+    }
+
+     fun addFavorite(placeId: String) {
+        viewModelScope.launch {
+            firebaseRepository.addFavorite(placeId)
         }
     }
 

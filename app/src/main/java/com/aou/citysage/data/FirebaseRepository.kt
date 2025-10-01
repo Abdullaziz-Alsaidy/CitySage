@@ -6,6 +6,7 @@ import com.aou.citysage.data.models.Place
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.uni.sehhaty.Utilitie.Appointment
@@ -38,6 +39,23 @@ class FirebaseRepository {
             Log.e("FirebaseRepository", "Error fetching places: ${e.message}", e)
             emptyList()
         }
+    }
+
+     fun addFavorite(placeId: String){
+        if (user != null) {
+            val documentRef = db.collection("Users")
+                .document(user.uid)
+
+            documentRef
+                .update("favorites", FieldValue.arrayUnion(placeId))
+                .addOnSuccessListener { documentReference ->
+                    Log.d("Yd2223","DocumentSnapshot added with ID: ")
+                }
+                .addOnFailureListener { e ->
+                    Log.d("Yd2223","error ${e.message}")
+                }
+        }
+
     }
     suspend fun createBooking(
         booking: Booking

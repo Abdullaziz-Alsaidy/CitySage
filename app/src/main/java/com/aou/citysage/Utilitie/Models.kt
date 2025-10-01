@@ -49,7 +49,8 @@ data class UserProfile(
     val lastName: String = "",
     val phone: String = "",
     val email: String = "",
-    val bookings:List<String> = emptyList<String>()
-)
+    val bookings:List<String> = emptyList<String>(),
+    val favorites:List<String> = emptyList<String>(),
+    )
 
 data class PaymentMethod(val name: String, @DrawableRes val iconRes: Int)
