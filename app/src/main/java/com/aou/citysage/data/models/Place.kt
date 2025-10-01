@@ -24,7 +24,9 @@ data class Place(
     @PropertyName("phone") val phone: String = "phone",
     @PropertyName("website") val website: String = "website",
     @PropertyName("latitude") val latitude: String = "website",
-    @PropertyName("longitude") val longitude: String = "website"
+    @PropertyName("longitude") val longitude: String = "website",
+
+    var isFavorite: Boolean = false
 )
 
 data class Booking(

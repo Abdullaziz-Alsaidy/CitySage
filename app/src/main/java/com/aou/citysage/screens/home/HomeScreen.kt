@@ -40,6 +40,9 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -231,7 +234,8 @@ fun HomeScreen(
                                    // viewModel.fetchPlace(place.id)
                                     ToDetailsPage(place.id)
                                     Log.d("PlaceDetailsScreen", "Received placeID: ${place.id}")
-                                }
+                                },
+                                viewModel = viewModel
                             )
                         }
                     }
@@ -251,7 +255,7 @@ fun HomeScreen(
     }
 }
 @Composable
-fun PlaceCard(item: Place, onBookClick: () -> Unit) {
+fun PlaceCard(item: Place, onBookClick: () -> Unit, viewModel: HomeViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -264,17 +268,20 @@ fun PlaceCard(item: Place, onBookClick: () -> Unit) {
     ){
         Box {
             GetTheRightImage(item.name)
-            val isFavorite = false
-            Icon(
-                imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+            IconButton(
+                onClick = {
+                   // viewModel.toggleMyValue()
+                    viewModel.addFavorite(placeId = item.id)
+                },
+            ) { Icon(
+                imageVector = if (item.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                 contentDescription = "Favorite",
-                tint = if (isFavorite) Color.Red else Color.White,
-
-                        modifier = Modifier
+                tint = if (item.isFavorite)  Color.Red else Color.White,
+                modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(8.dp)
-                    .size(28.dp)
-            )
+                    .size(28.dp),)
+            }
         }
         Column   (
             modifier = Modifier

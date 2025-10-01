@@ -33,14 +33,18 @@ class HomeViewModel : ViewModel()
         // Log.d("MyViewModel", "Toggled to ${_myValue.value}")
     }
     fun fetchPlaces() {
-        Log.d("FAPI","fetchPlaces1")
         viewModelScope.launch {
             _placesState.value = PlacesState.Loading
-            Log.d("FAPI","PlacesState.Loading")
             try {
                 val places = firebaseRepository.getPlaces()
-                Log.d("FAPI","${places}")
-                _placesState.value = PlacesState.Success(places)
+                val favorites = firebaseRepository.getFavorites() // suspend function
+
+                val updatedPlaces = places.map { place ->
+                    place.copy(isFavorite = favorites.contains(place.id))
+                }
+
+                _placesState.value = PlacesState.Success(updatedPlaces)
+
             } catch (e: Exception) {
                 _placesState.value = PlacesState.Error("Failed to fetch places: ${e.message}")
                 Log.e("HomeViewModel", "Error fetching places", e)
@@ -48,7 +52,9 @@ class HomeViewModel : ViewModel()
         }
     }
 
-     fun addFavorite(placeId: String) {
+
+
+    fun addFavorite(placeId: String) {
         viewModelScope.launch {
             firebaseRepository.addFavorite(placeId)
         }

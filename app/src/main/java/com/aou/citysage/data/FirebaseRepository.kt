@@ -57,6 +57,19 @@ class FirebaseRepository {
         }
 
     }
+    suspend fun getFavorites(): List<String> {
+        if (user == null) return emptyList()
+
+        return try {
+            val document = db.collection("Users").document(user.uid).get().await()
+            document.get("favorites") as? List<String> ?: emptyList()
+        } catch (e: Exception) {
+            Log.d("Yd2223", "Error fetching favorites: ${e.message}")
+            emptyList()
+        }
+    }
+
+
     suspend fun createBooking(
         booking: Booking
     )  {
@@ -76,8 +89,6 @@ class FirebaseRepository {
             // No user is currently signed in
             Log.d("User##", "No id")
         }
-// Add a new document with a generated ID
-
     }
 
     suspend fun getPlaces(): List<Place> {
