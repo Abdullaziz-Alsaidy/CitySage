@@ -61,7 +61,7 @@ import com.aou.citysage.data.models.Place
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = HomeViewModel(),
+    viewModel: HomeViewModel ,
     ToDetailsPage: (String) -> Unit
 ) {
     val placesState by viewModel.placesState.collectAsState()
@@ -270,10 +270,10 @@ fun PlaceCard(item: Place, onBookClick: () -> Unit, viewModel: HomeViewModel) {
             GetTheRightImage(item.name)
             IconButton(
                 onClick = {
-                   // viewModel.toggleMyValue()
-                    viewModel.addFavorite(placeId = item.id)
+                    viewModel.toggleFavorite(placeId = item.id)
                 },
-            ) { Icon(
+            ) {
+                Icon(
                 imageVector = if (item.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                 contentDescription = "Favorite",
                 tint = if (item.isFavorite)  Color.Red else Color.White,

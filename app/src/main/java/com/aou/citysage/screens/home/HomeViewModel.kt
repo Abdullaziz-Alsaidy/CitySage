@@ -26,12 +26,7 @@ class HomeViewModel : ViewModel()
     init {
         fetchPlaces()
     }
-    fun toggleMyValue() {
-        // ViewModel logic to update the state
-        _myValue.value = !_myValue.value
-        // You can also add logging here if needed for ViewModel-level debugging
-        // Log.d("MyViewModel", "Toggled to ${_myValue.value}")
-    }
+
     fun fetchPlaces() {
         viewModelScope.launch {
             _placesState.value = PlacesState.Loading
@@ -54,9 +49,35 @@ class HomeViewModel : ViewModel()
 
 
 
-    fun addFavorite(placeId: String) {
+    fun toggleFavorite(placeId: String) {
         viewModelScope.launch {
-            firebaseRepository.addFavorite(placeId)
+            val currentState = _placesState.value
+            if (currentState is PlacesState.Success) {
+                val updatedPlaces = currentState.places.map { place ->
+                    if (place.id == placeId) {
+                        val newIsFavorite = !place.isFavorite
+                        // Optimistic update: toggle locally for instant UI refresh
+                        place.copy(isFavorite = newIsFavorite)
+                    } else {
+                        place
+                    }
+                }
+                // Update state immediately
+                _placesState.value = PlacesState.Success(updatedPlaces)
+
+                try {
+                    // Persist to repository asynchronously
+                    if (updatedPlaces.find { it.id == placeId }?.isFavorite == true) {
+                        firebaseRepository.addFavorite(placeId)
+                    } else {
+                        firebaseRepository.removeFavorite(placeId) // Add this method to FirebaseRepository if missing
+                    }
+                } catch (e: Exception) {
+                    // On error, revert the optimistic update and refetch
+                    Log.e("HomeViewModel", "Error toggling favorite", e)
+                    fetchPlaces()
+                }
+            }
         }
     }
 

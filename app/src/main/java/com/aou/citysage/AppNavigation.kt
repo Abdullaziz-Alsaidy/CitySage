@@ -1,5 +1,7 @@
 package com.uni.sehhaty.Utilitie
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -23,11 +25,13 @@ import com.aou.citysage.screens.Login.LoginScreen
 import com.aou.citysage.LoginViewModel
 import com.aou.citysage.Screens
 import com.aou.citysage.screens.favorite.FavoriteScreen
+import com.aou.citysage.screens.home.HomeViewModel
 import com.aou.citysage.screens.home.PlaceDetailsScreen
 import com.aou.citysage.screens.mytrips.MyTripsScreen
 import com.aou.citysage.screens.profile.MyProfileScreen
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -127,6 +131,7 @@ fun AppNavigation() {
             }
             composable<Screens.HomePage> {
                 HomeScreen(
+                    viewModel = HomeViewModel(),
                     ToDetailsPage = { placeId ->
                         navController.navigate(Screens.PlaceDetailsPage(placeID = placeId ))
                     }

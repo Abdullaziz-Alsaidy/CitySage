@@ -57,6 +57,22 @@ class FirebaseRepository {
         }
 
     }
+    suspend fun removeFavorite(placeId: String) {
+        if (user != null) {
+            val documentRef = db.collection("Users")
+                .document(user.uid)
+
+            try {
+                documentRef
+                    .update("favorites", FieldValue.arrayRemove(placeId))
+                    .await() // Makes it suspend; requires import androidx.lifecycle:lifecycle-common-java8 or similar for Tasks.await extension
+                Log.d("Yd2223", "Favorite removed successfully")
+            } catch (e: Exception) {
+                Log.e("Yd2223", "Error removing favorite: ${e.message}")
+                throw e // Re-throw to handle in ViewModel
+            }
+        }
+    }
     suspend fun getFavorites(): List<String> {
         if (user == null) return emptyList()
 
